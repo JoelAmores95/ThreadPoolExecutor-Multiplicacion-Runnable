@@ -1,11 +1,10 @@
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 
-public class CallableTester {
+public class RunnableTester {
 
     public static final int NUM_HILOS = 7;
     public static final int NUM_EJECUCIONES = 10;
@@ -15,23 +14,16 @@ public class CallableTester {
         // Creo un executor con 7 hilos
         ThreadPoolExecutor ejecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(NUM_HILOS);
 
-        // Lista de Multiplicaciones
-        List<Multipliacion> listaTareas = new ArrayList<Multipliacion>();
+        for (int i = 0; i < NUM_EJECUCIONES; i++) {
+            // Creo un objeto Runnable
+            Runnable runnable = new Multipliacion((int) (Math.random() * 10), (int) (Math.random() * 10));
 
-        // Lleno las multiplicaciones
-        listaTareas = llenarLista(listaTareas);
-
-        // Lista que guardara los resultados
-        List<Future<Integer>> listaResultados;
-
-        // Proceso los resultados
-        listaResultados = ejecutor.invokeAll(listaTareas);
+            // Ejecuto el objeto Runnable
+            ejecutor.execute(runnable);
+        }
 
         // Paro el pool, es necesario
         ejecutor.shutdown();
-
-        // Muestro resultados
-        mostrarLista(listaResultados);
 
     }
 
